@@ -4,13 +4,15 @@ import Image from 'next/image'
 import styles from './page.module.css'
 import { Metadata } from 'next'
 import Link from 'next/link';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 const queryClient = new ApolloClient({
-  uri: process.env.NEXT_CHAT_BACKEND_URL!,
+  uri: process.env.chatBackendUrl!,
   cache: new InMemoryCache(),
   headers: {
-    authorization: `Bearer ${process.env.NEXT_BACKEND_AUTH_TOKEN}`
+    authorization: `Bearer ${process.env.chatBackendToken}`
   }
 });
 
@@ -20,6 +22,7 @@ export default function Page() {
     <ApolloProvider client={queryClient}>
       <h1>Hello, HomePage</h1>
       <Link href="/dashboard">Dashboard</Link>
+      <ToastContainer />
     </ApolloProvider>
   )
 }

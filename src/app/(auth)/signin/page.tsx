@@ -1,8 +1,8 @@
 "use client";
 import { GET_USER } from "@/api/getUser";
-import { SIGN_UP } from "@/api/signUp";
+import { SIGN_IN } from "@/api/auth";
 import { User } from "@/api/types";
-import { ApolloClient, ApolloProvider, InMemoryCache, useMutation } from "@apollo/client";
+import { ApolloClient, ApolloProvider, InMemoryCache, gql, useMutation } from "@apollo/client";
 import { Metadata } from "next";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -15,28 +15,29 @@ const queryClient = new ApolloClient({
   }
 });
 
-export default function SignUpPage() {
+export default function SignInPage() {
   return (
     <ApolloProvider client={queryClient}>
-      <SignUpForm />
+      <SignInForm />
     </ApolloProvider>
   )
 };
 
 
-function SignUpForm() {
+function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [user, setUser] = useState<User | null>(null); 
 
-  const [signUp, { error }] = useMutation(SIGN_UP, {
+  const [signIn, { error }] = useMutation(SIGN_IN, {
     onCompleted: (data) => {
-      setUser(data.signUp);
+      const accessToken = data.signIn;
       queryClient.cache.writeQuery({
-        query: GET_USER,
-        data: { user },
-        variables: { id: user?.id }
+        query: gql`
+          query SaveAccessToken {
+            accessToken
+          }
+        `,
+        data: { accessToken: accessToken },
       })
     }
   });
@@ -51,32 +52,18 @@ function SignUpForm() {
     if(prefersDarkMode) toggleDarkMode();
   }, []); 
 
-  const handleSignUp = async () => {
+  const handleSignIn = async () => {
     // Call the signUp mutation
-    await signUp({ variables: { email, name, password } });
-    toast.success(`User signed up successfully. Data: ${user}`, { position: toast.POSITION.TOP_CENTER });
+    await signIn({ variables: { email, password } });
   };
 
   return (
-     <div className="min-h-screen flex items-center justify-center bg-black">
-       <div className="bg-white dark:bg-gray-900 p-8 rounded shadow-md w-96">
+     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900">
+       <div className="dark:bg-white bg-gray-900 p-8 rounded shadow-md w-96">
          <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-600">Sign Up</h2>
-         <form onSubmit={handleSignUp}>
+         <form onSubmit={handleSignIn}>
            <div className="mb-4">
-             <label htmlFor="name" className="block text-sm font-medium text-gray-600">
-               Name
-             </label>
-             <input
-               type="text"
-               id="name"
-              name="name"
-              value={name}
-              onChange={(e)=> setName(e.target.value)}
-               className="mt-1 p-2 w-full border rounded focus:ring focus:ring-indigo-200"
-             />
-           </div>
-           <div className="mb-4">
-             <label htmlFor="email" className="block text-sm font-medium text-gray-600">
+             <label htmlFor="email" className={inputLabel}>
                Email
              </label>
              <input
@@ -85,11 +72,11 @@ function SignUpForm() {
               name="email"
               value={email}
               onChange={(e)=> setEmail(e.target.value)}
-               className="mt-1 p-2 w-full border rounded focus:ring focus:ring-indigo-200"
+               className={inputField}
              />
            </div>
            <div className="mb-4">
-             <label htmlFor="password" className="block text-sm font-medium text-gray-600">
+             <label htmlFor="password" className={inputLabel}>
                Password
              </label>
              <input
@@ -98,14 +85,14 @@ function SignUpForm() {
               name="password"
               value={password}
               onChange={(e)=> setPassword(e.target.value)}
-               className="mt-1 p-2 w-full border rounded focus:ring focus:ring-indigo-200"
+               className={inputField}
              />
            </div>
            <button
             type="submit"
              className="w-full bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700 focus:ring focus:ring-indigo-200"
            >
-             Sign Up
+             Sign In
            </button>
         </form>
         <button
@@ -118,3 +105,19 @@ function SignUpForm() {
      </div>
    );
  };
+const inputLabel = `
+    block
+    text-sm
+    font-medium
+    text-gray-600
+ 
+`
+ const inputField = `
+    mt-1
+    p-2
+    w-full
+    border
+    rounded
+    focus:ring
+    focus:ring-indigo-200
+ `

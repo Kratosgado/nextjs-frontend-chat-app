@@ -123,7 +123,6 @@ const inputLabel = `
     text-sm
     font-medium
     text-gray-600
- 
 `
  const inputField = `
     mt-1

@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import Link from 'next/link'
+import { Header } from '@/components/Header'
+import { ChatList } from '@/components/ChatList'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +19,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Header />
+        <div className='flex flex-row w-full'>
+          <ChatList />
+          {children}
+          <ChatList />
+        </div>
+      </body>
     </html>
   )
 }

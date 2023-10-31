@@ -12,13 +12,19 @@ const conversations = [
      convoName: 'Bob',
      lastMessage: 'Hi, how are you?',
      lastMessageSentAt: '2023-10-18T15:45:00Z',
-   },
+  },
+  {
+    id: 3,
+    convoName: 'Bob',
+    lastMessage: 'Hi, how are you?',
+    lastMessageSentAt: '2023-10-18T15:45:00Z',
+  },
    // Add more conversations as needed
  ];
  
  export const ChatList = () => {
    return (
-     <aside className="p-4 w-96">
+     <aside className="p-4 flex-auto w-1/5">
        <h1 className="text-2xl font-semibold mb-4">Chat Conversations</h1>
        <div className="grid gap-4">
          {conversations.map((conversation) => (

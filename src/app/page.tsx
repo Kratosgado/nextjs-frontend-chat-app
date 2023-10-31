@@ -11,17 +11,17 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 const queryClient = new ApolloClient({
   uri: process.env.chatBackendUrl!,
   cache: new InMemoryCache(),
-  headers: {
-    authorization: `Bearer ${process.env.chatBackendToken}`
-  }
+  // headers: {
+  //   authorization: `Bearer ${process.env.chatBackendToken}`
+  // }
 });
 
 
 export default function Page() {
   return (
     <ApolloProvider client={queryClient}>
-      <h1>Hello, HomePage</h1>
-      <Link href="/dashboard">Dashboard</Link>
+      <h1 className="text-2xl font-semibold">Hello, HomePage</h1>
+      <Link href="/dashboard" className="text-blue-500">Dashboard</Link> {/* Use text color class */}
       <ToastContainer />
     </ApolloProvider>
   )

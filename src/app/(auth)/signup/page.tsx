@@ -6,6 +6,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache, useMutation } from "@apoll
 import { Metadata } from "next";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import {Button} from '@mui/material';
 
 const queryClient = new ApolloClient({
   uri: process.env.chatBackendUrl!,
@@ -100,7 +101,8 @@ function SignUpForm() {
               onChange={(e)=> setPassword(e.target.value)}
                className={inputField}
              />
-           </div>
+          </div>
+          <Button variant="contained">Sign Up</Button>
            <button
             type="submit"
              className="w-full bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700 focus:ring focus:ring-indigo-200"

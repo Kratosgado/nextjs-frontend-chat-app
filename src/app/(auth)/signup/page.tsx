@@ -1,26 +1,13 @@
 "use client";
-import { GET_USER } from "@/api/getUser";
-import { SIGN_UP } from "@/api/auth";
 import { User } from "@/api/types";
-import { ApolloClient, ApolloProvider, InMemoryCache, useMutation } from "@apollo/client";
 import { Metadata } from "next";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {Button} from '@mui/material';
 
-const queryClient = new ApolloClient({
-  uri: process.env.chatBackendUrl!,
-  cache: new InMemoryCache(),
-  headers: {
-    authorization: `Bearer ${process.env.chatBackendToken}`
-  }
-});
-
 export default function SignUpPage() {
   return (
-    <ApolloProvider client={queryClient}>
       <SignUpForm />
-    </ApolloProvider>
   )
 };
 
@@ -30,17 +17,6 @@ function SignUpForm() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [user, setUser] = useState<User | null>(null); 
-
-  const [signUp, { error }] = useMutation(SIGN_UP, {
-    onCompleted: (data) => {
-      setUser(data.signUp);
-      queryClient.cache.writeQuery({
-        query: GET_USER,
-        data: { user },
-        variables: { id: user?.id }
-      })
-    }
-  });
 
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle('dark');
@@ -54,7 +30,7 @@ function SignUpForm() {
 
   const handleSignUp = async () => {
     // Call the signUp mutation
-    await signUp({ variables: { email, name, password } });
+    // await signUp({ variables: { email, name, password } });
     toast.success(`User signed up successfully. Data: ${user}`, { position: toast.POSITION.TOP_CENTER });
   };
 

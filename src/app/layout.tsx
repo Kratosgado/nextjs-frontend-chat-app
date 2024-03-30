@@ -29,7 +29,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <Header />
         <div className='flex flex-row w-full'>
-          <ChatList />
           <div className="items-center flex-auto w-3/5">
             {children}
           </div>

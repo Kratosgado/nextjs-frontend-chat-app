@@ -1,25 +1,13 @@
 "use client";
-import { GET_USER } from "@/api/getUser";
-import { SIGN_IN } from "@/api/auth";
 import { User } from "@/api/types";
-import { ApolloClient, ApolloProvider, InMemoryCache, gql, useMutation } from "@apollo/client";
 import { Metadata } from "next";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const queryClient = new ApolloClient({
-  uri: process.env.chatBackendUrl!,
-  cache: new InMemoryCache(),
-  headers: {
-    authorization: `Bearer ${process.env.chatBackendToken}`
-  }
-});
 
 export default function SignInPage() {
   return (
-    <ApolloProvider client={queryClient}>
       <SignInForm />
-    </ApolloProvider>
   )
 };
 
@@ -28,19 +16,19 @@ function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [signIn, { error }] = useMutation(SIGN_IN, {
-    onCompleted: (data) => {
-      const accessToken = data.signIn;
-      queryClient.cache.writeQuery({
-        query: gql`
-          query SaveAccessToken {
-            accessToken
-          }
-        `,
-        data: { accessToken: accessToken },
-      })
-    }
-  });
+  // const [signIn, { error }] = useMutation(SIGN_IN, {
+  //   onCompleted: (data) => {
+  //     const accessToken = data.signIn;
+  //     queryClient.cache.writeQuery({
+  //       query: gql`
+  //         query SaveAccessToken {
+  //           accessToken
+  //         }
+  //       `,
+  //       data: { accessToken: accessToken },
+  //     })
+  //   }
+  // });
 
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle('dark');
@@ -54,7 +42,7 @@ function SignInForm() {
 
   const handleSignIn = async () => {
     // Call the signUp mutation
-    await signIn({ variables: { email, password } });
+    // await signIn({ variables: { email, password } });
   };
 
   return (

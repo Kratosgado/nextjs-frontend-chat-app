@@ -10,7 +10,7 @@ const nextConfig = {
       typedRoutes: true,
    },
    env: {
-      chatBackendUrl: "http://localhost:4000/graphql",
+      chatBackendUrl: "http://localhost:4000",
       chatUserToken: ""
    },
 }

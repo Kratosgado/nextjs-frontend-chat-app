@@ -1,5 +1,4 @@
 "use client";
-import { login } from "@/api/auth";
 import { User } from "@/api/types";
 import { Metadata } from "next";
 import { useEffect, useState } from "react";
@@ -13,19 +12,51 @@ export default function SignInPage() {
 };
 
 
-function SignInForm() {
+function SignInForm(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleLogin = async () => {
-    // Call the signUp mutation
-    console.log(email, password)
-    const response = await login({ email, password });
-    if (response.ok) {
-      toast.success(`User signed in successfully.`, { position: toast.POSITION.TOP_CENTER });
-    } else {
-      toast.error(`User sign in failed.`, { position: toast.POSITION.TOP_CENTER });
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch(`${process.env.chatBackendUrl!}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "email": email,
+          "password": password
+        })
+      });
+      return response;
+    } catch (error) {
+       throw error;
     }
+  }
+  
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+      try {
+        const response: Response = await login(email, password);
+        if (response.ok) {
+          localStorage.setItem('token', await response.text());
+          toast.success(`User signed in successfully.`, { position: toast.POSITION.TOP_CENTER });
+        } else {
+          toast.error(`User sign in failed.`, { position: toast.POSITION.TOP_CENTER });
+        }
+      } catch (error) {
+        toast.error(`${error}`, { position: toast.POSITION.TOP_CENTER });
+      }
+    
+    
+    // // Call the signUp mutation
+    // console.log(email, password)
+    // const response = await login(email, password);
+    // if (response.ok) {
+    //   toast.success(`User signed in successfully.`, { position: toast.POSITION.TOP_CENTER });
+    // } else {
+    //   toast.error(`User sign in failed.`, { position: toast.POSITION.TOP_CENTER });
+    // }
   };
 
   return (
@@ -41,6 +72,7 @@ function SignInForm() {
                type="email"
                id="email"
               name="email"
+              autoComplete="email"
               value={email}
               onChange={(e)=> setEmail(e.target.value)}
                className={inputField}

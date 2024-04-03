@@ -10,7 +10,7 @@ export type HeaderProps = {
      <header className='bg-indigo-600 py-4 text-white'>
        <div className='container mx-auto flex items-center justify-between'>
          <h1 className='font-semibold text-2xl'>Demo Chat App</h1>
-         <MaterialUISwitch onChange={toggleDarkMode} defaultChecked/>
+         <MaterialUISwitch id="themeIcon" onChange={toggleDarkMode} defaultChecked/>
          <div className='flex space-x-4'>
            <Link className='hover:text-gray-300' href={"/"}>Home</Link>
            <button className='hover:text-gray-300'>Conversations</button>

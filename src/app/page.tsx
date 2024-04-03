@@ -30,11 +30,13 @@ export default function Page() {
     }
   }, [isAuthenticated, router]);
   return (
+    <>
+     <ToastContainer />
       <App>
         <h1 className="text-2xl font-semibold">Hello, HomePage</h1>
       
-      <ToastContainer />
       </App>
+    </>
   )
 }
 

@@ -1,7 +1,7 @@
 "use client";
-import { User } from "@/api/types";
+import { SignUpInput, User } from "@/api/types";
 import { Metadata } from "next";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {Button} from '@mui/material';
 
@@ -17,10 +17,29 @@ function SignUpForm() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [user, setUser] = useState<User | null>(null); 
+   const signUp = async ({ email, name, password }: SignUpInput) => {
+    console.log(email, password, name);
+  
+    const response = await fetch(`${process.env.chatBackendUrl!}/auth/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "email": email,
+        "username": name,
+        "password": password
+      })
+    });
+    return response.json();
+  }
+  
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (event: React.FormEvent) => {
+    event.preventDefault();
     // Call the signUp mutation
-    // await signUp({ variables: { email, name, password } });
+    toast.info(`Signing up user...`, { position: toast.POSITION.TOP_CENTER });
+    await signUp( { email, name, password } );
     toast.success(`User signed up successfully. Data: ${user}`, { position: toast.POSITION.TOP_CENTER });
   };
 
@@ -28,7 +47,7 @@ function SignUpForm() {
      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900">
        <div className="dark:bg-white bg-gray-900 p-8 rounded shadow-md w-96">
          <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-600">Sign Up</h2>
-         <form onSubmit={handleSignUp}>
+         <form>
            <div className="mb-4">
              <label htmlFor="name" className={inputLabel}>
                Name
@@ -70,7 +89,7 @@ function SignUpForm() {
           </div>
           <Button variant="contained">Sign Up</Button>
            <button
-            type="submit"
+            type="submit" onClick={handleSignUp}
              className="w-full bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700 focus:ring focus:ring-indigo-200"
            >
              Sign Up

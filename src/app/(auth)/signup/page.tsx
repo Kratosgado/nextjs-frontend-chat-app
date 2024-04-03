@@ -18,16 +18,6 @@ function SignUpForm() {
   const [name, setName] = useState("");
   const [user, setUser] = useState<User | null>(null); 
 
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark');
-  };
-
-  useEffect(() => {
-    // check user's preference for dark mode, and set it if needed
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
-    if(prefersDarkMode) toggleDarkMode();
-  }, []); 
-
   const handleSignUp = async () => {
     // Call the signUp mutation
     // await signUp({ variables: { email, name, password } });
@@ -86,12 +76,6 @@ function SignUpForm() {
              Sign Up
            </button>
         </form>
-        <button
-          onClick={toggleDarkMode}
-          className="w-full p-2 mt-4 rounded text-gray-500 bg-indigo-600 hover:bg-indigo-700 focus:ring focus:ring-indigo-200 dark:bg-gray-600 dark:hover:bg-gray-700"
-        >
-          Toggle Dark Mode
-        </button>
        </div>
      </div>
    );

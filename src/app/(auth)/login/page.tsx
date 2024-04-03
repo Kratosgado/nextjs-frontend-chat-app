@@ -1,4 +1,5 @@
 "use client";
+import { login } from "@/api/auth";
 import { User } from "@/api/types";
 import { Metadata } from "next";
 import { useEffect, useState } from "react";
@@ -16,40 +17,22 @@ function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // const [signIn, { error }] = useMutation(SIGN_IN, {
-  //   onCompleted: (data) => {
-  //     const accessToken = data.signIn;
-  //     queryClient.cache.writeQuery({
-  //       query: gql`
-  //         query SaveAccessToken {
-  //           accessToken
-  //         }
-  //       `,
-  //       data: { accessToken: accessToken },
-  //     })
-  //   }
-  // });
-
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark');
-  };
-
-  useEffect(() => {
-    // check user's preference for dark mode, and set it if needed
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
-    if(prefersDarkMode) toggleDarkMode();
-  }, []); 
-
-  const handleSignIn = async () => {
+  const handleLogin = async () => {
     // Call the signUp mutation
-    // await signIn({ variables: { email, password } });
+    console.log(email, password)
+    const response = await login({ email, password });
+    if (response.ok) {
+      toast.success(`User signed in successfully.`, { position: toast.POSITION.TOP_CENTER });
+    } else {
+      toast.error(`User sign in failed.`, { position: toast.POSITION.TOP_CENTER });
+    }
   };
 
   return (
-     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900">
-       <div className="dark:bg-white bg-gray-900 p-8 rounded shadow-md w-96">
-         <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-600">Sign Up</h2>
-         <form onSubmit={handleSignIn}>
+     <div className="min-h-screen flex items-center bg-slate-900 justify-center">
+       <div className="bg-white p-8 rounded shadow-md w-96">
+         <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-600">Login</h2>
+         <form onSubmit={handleLogin}>
            <div className="mb-4">
              <label htmlFor="email" className={inputLabel}>
                Email
@@ -83,12 +66,6 @@ function SignInForm() {
              Sign In
            </button>
         </form>
-        <button
-          onClick={toggleDarkMode}
-          className="w-full p-2 mt-4 rounded text-gray-500 bg-indigo-600 hover:bg-indigo-700 focus:ring focus:ring-indigo-200 dark:bg-gray-600 dark:hover:bg-gray-700"
-        >
-          Toggle Dark Mode
-        </button>
        </div>
      </div>
    );

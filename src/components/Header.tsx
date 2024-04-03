@@ -14,7 +14,7 @@ export type HeaderProps = {
          <div className='flex space-x-4'>
            <Link className='hover:text-gray-300' href={"/"}>Home</Link>
            <button className='hover:text-gray-300'>Conversations</button>
-           <Link href={"/signin"} className='hover:text-gray-300'>{!headerProps.username ? "Login": headerProps.username}</Link>
+           <Link href={"/login"} className='hover:text-gray-300'>{!headerProps.username ? "Login": headerProps.username}</Link>
          </div>
        </div>
      </header>

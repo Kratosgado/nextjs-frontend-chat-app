@@ -1,7 +1,8 @@
 "use client";
 import { User } from "@/api/types";
+import { AuthContext } from "@/app/page";
 import { Metadata } from "next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 
@@ -15,6 +16,7 @@ export default function SignInPage() {
 function SignInForm(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const authContext = useContext(AuthContext);
   const login = async (email: string, password: string) => {
     try {
       const response = await fetch(`${process.env.chatBackendUrl!}/auth/login`, {
@@ -40,23 +42,15 @@ function SignInForm(){
         const response: Response = await login(email, password);
         if (response.ok) {
           localStorage.setItem('token', await response.text());
+          authContext!.setIsAuthenticated(true);
           toast.success(`User signed in successfully.`, { position: toast.POSITION.TOP_CENTER });
         } else {
           toast.error(`User sign in failed.`, { position: toast.POSITION.TOP_CENTER });
         }
       } catch (error) {
+        console.log(error);
         toast.error(`${error}`, { position: toast.POSITION.TOP_CENTER });
       }
-    
-    
-    // // Call the signUp mutation
-    // console.log(email, password)
-    // const response = await login(email, password);
-    // if (response.ok) {
-    //   toast.success(`User signed in successfully.`, { position: toast.POSITION.TOP_CENTER });
-    // } else {
-    //   toast.error(`User sign in failed.`, { position: toast.POSITION.TOP_CENTER });
-    // }
   };
 
   return (

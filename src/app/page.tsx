@@ -8,7 +8,6 @@ import { ToastContainer } from 'react-toastify';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter, redirect } from 'next/navigation';
 import 'react-toastify/dist/ReactToastify.css';
-import { checkUserSession } from '@/api/auth';
 
 // create a context for the user's authentication state
 interface AuthContextData {
@@ -16,7 +15,7 @@ interface AuthContextData {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AuthContext = createContext<AuthContextData | null>(null);
+export const AuthContext = createContext<AuthContextData | null>(null);
 
 
 
@@ -34,7 +33,6 @@ export default function Page() {
      <ToastContainer />
       <App>
         <h1 className="text-2xl font-semibold">Hello, HomePage</h1>
-      
       </App>
     </>
   )
@@ -57,4 +55,20 @@ const App = ({children}: {children: React.ReactNode}) => {
       {children}
     </AuthContext.Provider>
   )
+}
+
+const checkUserSession = async (): Promise<boolean> => {
+  const token = localStorage.getItem('token');
+
+  if (!token) { return false; }
+  const response = await fetch(`${process.env.chatBackendUrl!}/user/me`, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  console.log(token);
+
+  return response.ok;
 }

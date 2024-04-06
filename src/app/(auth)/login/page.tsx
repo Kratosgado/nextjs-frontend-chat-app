@@ -1,7 +1,10 @@
 "use client";
 import { User } from "@/api/types";
-import { AuthContext } from "@/app/page";
-import { Metadata } from "next";
+import { checkUserSession } from "@/app/page";
+import { useAppDispatch } from "@/lib/hooks";
+import { AppDispatch } from "@/lib/store";
+import {useRouter} from 'next/navigation'
+import next, { Metadata } from "next";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -16,7 +19,9 @@ export default function SignInPage() {
 function SignInForm(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const authContext = useContext(AuthContext);
+  const dispatch: AppDispatch = useAppDispatch();
+  const router = useRouter();
+
   const login = async (email: string, password: string) => {
     try {
       const response = await fetch(`${process.env.chatBackendUrl!}/auth/login`, {
@@ -37,13 +42,16 @@ function SignInForm(){
   
 
   const handleLogin = async (event: React.FormEvent) => {
+    
     event.preventDefault();
       try {
         const response: Response = await login(email, password);
         if (response.ok) {
           localStorage.setItem('token', await response.text());
-          authContext!.setIsAuthenticated(true);
+          dispatch({ type: 'SET_USER', payload: await checkUserSession() });
           toast.success(`User signed in successfully.`, { position: toast.POSITION.TOP_CENTER });
+          router.back();
+          
         } else {
           toast.error(`User sign in failed.`, { position: toast.POSITION.TOP_CENTER });
         }

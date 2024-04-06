@@ -5,8 +5,6 @@ export type User = {
    id: string;
    email: string;
    name: string;
-   password: string;
-   salt: string;
   /// Date of account creation
    createdAt: Date;
    updatedAt: Date;
